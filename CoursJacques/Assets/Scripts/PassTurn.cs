@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PassTurn : MonoBehaviour
 {
     public AI aiScript;
     public FightManager fightManager;
+
+    public GameObject text;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -20,15 +24,27 @@ public class PassTurn : MonoBehaviour
 
     public void Pass()
     {
-        switch (fightManager.currentTurn)
+        if (fightManager.playerLife == 0)
         {
-            case FightManager.Turn.AI : fightManager.ChangeTurn(); break;
-            case FightManager.Turn.Player : fightManager.ChangeTurn(); break;
+            text.GetComponent<TMP_Text>().text = "PERDU";
         }
-        switch (fightManager.currentTurn)
+        if (fightManager.aiLife == 0)
         {
-            case FightManager.Turn.AI : aiScript.ManageAITurn(); break;
+            text.GetComponent<TMP_Text>().text = "GAGNE";
         }
+        else
+        {
+            switch (fightManager.currentTurn)
+            {
+                case FightManager.Turn.AI : fightManager.ChangeTurn(); break;
+                case FightManager.Turn.Player : fightManager.ChangeTurn(); break;
+            }
+            switch (fightManager.currentTurn)
+            {
+                case FightManager.Turn.AI : aiScript.ManageAITurn(); break;
+            }
+        }
+        
         
     }
 }

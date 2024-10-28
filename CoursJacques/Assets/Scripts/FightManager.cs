@@ -85,6 +85,18 @@ public class FightManager : MonoBehaviour
         
     }
     
+    public void Tirer()
+    {
+        if (currentTurn == Turn.Player && canPlay)
+        {
+            canPlay = false;
+            aiLife = EditLife(aiLife, -40f);
+            playerObject.GetComponent<Animation>().Play("gun");
+            LifeDisplayUpdate();
+        }
+        
+    }
+    
     
     
     

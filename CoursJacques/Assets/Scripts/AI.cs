@@ -20,7 +20,7 @@ public class AI : MonoBehaviour
         
     public void DetermineState(float hp)
     {
-        m_currentAIState = hp < 10 ? AIState.loosing : AIState.winning;
+        m_currentAIState = hp < 40 ? AIState.loosing : AIState.winning;
     }
         
     public void ManageAITurn()
@@ -47,6 +47,21 @@ public class AI : MonoBehaviour
         
         fightManager.LifeDisplayUpdate();
     }
+    
+    public void ManageWinning()
+    {
+        var rand = Random.Range(0, 100);
+        if(rand > 60)
+        {
+            Shoot();
+        }
+        else
+        {
+            Attack();
+        }
+        
+        fightManager.LifeDisplayUpdate();
+    }
 
     public void Attack()
     {
@@ -60,16 +75,18 @@ public class AI : MonoBehaviour
         aiObject.GetComponent<Animation>().Play("heal");
     }
     
+    public void Shoot()
+    {
+        fightManager.playerLife = fightManager.EditLife(fightManager.playerLife, -40f);
+        aiObject.GetComponent<Animation>().Play("gun");
+    }
+    
     public void RunAway()
     {
         // IA QUITS FIGHT
     }
     
-    public void ManageWinning()
-    {
-        Attack();
-        fightManager.LifeDisplayUpdate();
-    }
+    
 
     public void EndTurn()
     {
