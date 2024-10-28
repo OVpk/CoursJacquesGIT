@@ -34,11 +34,7 @@ public class PassTurn : MonoBehaviour
         }
         else
         {
-            switch (fightManager.currentTurn)
-            {
-                case FightManager.Turn.AI : fightManager.ChangeTurn(); break;
-                case FightManager.Turn.Player : fightManager.ChangeTurn(); break;
-            }
+            fightManager.ChangeTurn();
             switch (fightManager.currentTurn)
             {
                 case FightManager.Turn.AI : aiScript.ManageAITurn(); break;

@@ -81,17 +81,5 @@ public class AI : MonoBehaviour
         aiObject.GetComponent<Animation>().Play("gun");
     }
     
-    public void RunAway()
-    {
-        // IA QUITS FIGHT
-    }
-    
-    
-
-    public void EndTurn()
-    {
-        // next player
-    }
-    
         
 }
