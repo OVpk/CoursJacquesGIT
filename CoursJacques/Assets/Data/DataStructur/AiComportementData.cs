@@ -18,7 +18,8 @@ public class AiComportementData : ScriptableObject
     }
 }
 
-public class AiComportementDataInstance
+
+public class AiComportementDataInstance //WRAPPER
 {
     public int StepBeforeLoosing;
     public int PercentLoosing;

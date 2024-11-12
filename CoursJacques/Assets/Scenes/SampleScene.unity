@@ -2583,7 +2583,7 @@ MonoBehaviour:
   currentTurn: 0
   playerLifeBarImage: {fileID: 483084553}
   aiLifeBarImage: {fileID: 1961438236}
-  playerObject: {fileID: 1757220083}
+  playerAnimation: {fileID: 1757220084}
 --- !u!1 &1072886615
 GameObject:
   m_ObjectHideFlags: 0
@@ -3554,8 +3554,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fightManager: {fileID: 1070397505}
-  aiObject: {fileID: 1932543578}
-  m_currentAIState: 1
+  aiComportementData: {fileID: 11400000, guid: 111d70a12c90293408cafd56d0435b6a, type: 2}
+  currentAIState: 1
+  aiAnimation: {fileID: 1932543580}
 --- !u!1 &1487418824
 GameObject:
   m_ObjectHideFlags: 0
@@ -4398,7 +4399,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aiScript: {fileID: 1454038384}
   fightManager: {fileID: 1070397505}
-  text: {fileID: 1745569644}
+  endGameText: {fileID: 1745569645}
 --- !u!1 &1767449606
 GameObject:
   m_ObjectHideFlags: 0
@@ -4530,7 +4531,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aiScript: {fileID: 1454038384}
   fightManager: {fileID: 1070397505}
-  text: {fileID: 1745569644}
+  endGameText: {fileID: 1745569645}
 --- !u!111 &1932543580
 Animation:
   m_ObjectHideFlags: 0

@@ -13,9 +13,10 @@ public class FightManager : MonoBehaviour
     public PokemonData aiData;
     
     // modifiable data
-    public PokemonDataInstance currentPlayerData;
-    public PokemonDataInstance currentAiData;
-    public void Awake()
+    public PokemonDataInstance currentPlayerData { get; private set; }
+    public PokemonDataInstance currentAiData { get; private set; }
+    
+    private void Awake()
     {
         currentPlayerData = playerData.Instance();
         currentAiData = aiData.Instance();
@@ -26,11 +27,11 @@ public class FightManager : MonoBehaviour
     
     #region TEXT IN SCENE INITIALIZATION
     
-    public TMP_Text currentTurnText;
+    [SerializeField] private TMP_Text currentTurnText;
     
-    public TMP_Text attack1Name;
-    public TMP_Text attack2Name;
-    public TMP_Text attack3Name;
+    [SerializeField] private TMP_Text attack1Name;
+    [SerializeField] private TMP_Text attack2Name;
+    [SerializeField] private TMP_Text attack3Name;
     
     private void Start()
     {
@@ -46,7 +47,7 @@ public class FightManager : MonoBehaviour
 
     #region TURN GESTION WITH STATE-MACHINE
     
-    public bool canPlay = true;
+    private bool canPlay = true;
     
     public enum Turn
     {
@@ -54,7 +55,7 @@ public class FightManager : MonoBehaviour
         AI
     }
 
-    public Turn currentTurn = Turn.Player;
+    public Turn currentTurn { get; private set; }= Turn.Player;
     
     public void ChangeTurn()
     {
@@ -68,8 +69,8 @@ public class FightManager : MonoBehaviour
 
     #region LIFE SYSTEM
     
-    public Image playerLifeBarImage;
-    public Image aiLifeBarImage;
+    [SerializeField] private Image playerLifeBarImage;
+    [SerializeField] private Image aiLifeBarImage;
 
     public void LifeDisplayUpdate(string target)
     {
@@ -80,7 +81,7 @@ public class FightManager : MonoBehaviour
         }
     }
     
-    public int EditLife(int currentLife, int addedNumber, int maxLife)
+    public static int EditLife(int currentLife, int addedNumber, int maxLife)
     {
         currentLife += addedNumber;
         return Math.Clamp(currentLife, 0, maxLife);
@@ -91,7 +92,7 @@ public class FightManager : MonoBehaviour
 
     #region ATTACK GESTION SYSTEM
 
-    public Animation playerAnimation;
+    [SerializeField] private Animation playerAnimation;
 
     private void Attack(int index)
     {
@@ -100,11 +101,11 @@ public class FightManager : MonoBehaviour
             canPlay = false;
             switch (currentPlayerData.attacks[index].target)
             {
-                case global::Attack.Target.Self : currentPlayerData.hp =
+                case AttackData.Target.Self : currentPlayerData.hp =
                         EditLife(currentPlayerData.hp, currentPlayerData.attacks[index].power,playerData.hp);
                         LifeDisplayUpdate("player");
                     break;
-                case global::Attack.Target.Other : currentAiData.hp =
+                case AttackData.Target.Other : currentAiData.hp =
                         EditLife(currentAiData.hp, currentPlayerData.attacks[index].power,aiData.hp);
                         LifeDisplayUpdate("ai");
                     break;
@@ -113,15 +114,15 @@ public class FightManager : MonoBehaviour
         }
     }
 
-    public void Attack1Button()
+    private void Attack1Button()
     {
         Attack(0);
     }
-    public void Attack2Button()
+    private void Attack2Button()
     {
         Attack(1);
     }
-    public void Attack3Button()
+    private void Attack3Button()
     {
         Attack(2);
     }

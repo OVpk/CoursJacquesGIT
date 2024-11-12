@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f402367a738c8194aaba885cd81571e6, type: 3}
+  m_Script: {fileID: 11500000, guid: 0b8b82acc5f1e284fbac23ceeaf8c943, type: 3}
   m_Name: Shoot
   m_EditorClassIdentifier: 
-  attackName: Shoot
-  damages: -40
-  target: 1
-  animName: gun
+  <attackName>k__BackingField: Shoot
+  <power>k__BackingField: -40
+  <target>k__BackingField: 1
+  <animName>k__BackingField: gun

@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f402367a738c8194aaba885cd81571e6, type: 3}
+  m_Script: {fileID: 11500000, guid: 0b8b82acc5f1e284fbac23ceeaf8c943, type: 3}
   m_Name: Punch
   m_EditorClassIdentifier: 
-  attackName: Punch
-  damages: -20
-  target: 1
-  animName: animation
+  <attackName>k__BackingField: Punch
+  <power>k__BackingField: -20
+  <target>k__BackingField: 1
+  <animName>k__BackingField: animation

@@ -3,17 +3,17 @@ using UnityEngine;
 
 public class PassTurn : MonoBehaviour
 {
-    public AI aiScript;
-    public FightManager fightManager;
+    [SerializeField] private AI aiScript;
+    [SerializeField] private FightManager fightManager;
     
 
     #region ATTACK EVENT SYSTEM
     
     //THIS FUNCTION IS CALL AT THE END OF ATTACK ANIM (with event), AND SWITCH THE TURN IF NOBODY HAVE WIN
     
-    public TMP_Text endGameText;
+    [SerializeField] private TMP_Text endGameText;
     
-    public void SwitchTurn()
+    private void SwitchTurn()
     {
         if (fightManager.currentPlayerData.hp == 0)
         {

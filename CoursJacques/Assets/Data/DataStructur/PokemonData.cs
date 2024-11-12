@@ -10,7 +10,7 @@ public class PokemonData : ScriptableObject
     public int hp { get; private set; }
     
     [field: Header("pokemon attacks"), Space,SerializeField]
-    public Attack[] attacks { get; private set; }
+    public AttackData[] attacks { get; private set; }
     
     public PokemonDataInstance Instance()
     {
@@ -18,11 +18,11 @@ public class PokemonData : ScriptableObject
     }
 }
 
-public class PokemonDataInstance
+public class PokemonDataInstance //WRAPPER
 {
     public string pokemonName;
     public int hp;
-    public Attack[] attacks;
+    public AttackData[] attacks;
 
     public PokemonDataInstance(PokemonData data)
     {
