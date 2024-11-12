@@ -1,15 +1,51 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class FightManager : MonoBehaviour
 {
-    
-    public GameObject textCurrent;
 
+    #region DATA INITIALIZATION
+    
+    // Stored data
+    public PokemonData playerData;
+    public PokemonData aiData;
+    
+    // modifiable data
+    public PokemonDataInstance currentPlayerData;
+    public PokemonDataInstance currentAiData;
+    public void Awake()
+    {
+        currentPlayerData = playerData.Instance();
+        currentAiData = aiData.Instance();
+    }
+    
+    #endregion
+    
+    
+    #region TEXT IN SCENE INITIALIZATION
+    
+    public TMP_Text currentTurnText;
+    
+    public TMP_Text attack1Name;
+    public TMP_Text attack2Name;
+    public TMP_Text attack3Name;
+    
+    private void Start()
+    {
+        currentTurnText.text = currentTurn.ToString();
+
+        attack1Name.text = currentPlayerData.attacks[0].attackName;
+        attack2Name.text = currentPlayerData.attacks[1].attackName;
+        attack3Name.text = currentPlayerData.attacks[2].attackName;
+    }
+    
+    #endregion
+    
+
+    #region TURN GESTION WITH STATE-MACHINE
+    
     public bool canPlay = true;
     
     public enum Turn
@@ -24,82 +60,72 @@ public class FightManager : MonoBehaviour
     {
         canPlay = true;
         currentTurn = currentTurn == Turn.Player ? Turn.AI : Turn.Player;
-        textCurrent.GetComponent<TMP_Text>().text = currentTurn.ToString();
+        currentTurnText.text = currentTurn.ToString();
     }
 
-    private void Start()
-    {
-        textCurrent.GetComponent<TMP_Text>().text = currentTurn.ToString();
-    }
+    #endregion
     
-    public float playerLife = 100;
-    public float aiLife = 100;
-    public float maxLife = 100;
 
-    public float EditLife(float currentLife, float addedNumber)
-    {
-        currentLife += addedNumber;
-        if (currentLife > maxLife)
-        {
-            currentLife = maxLife;
-        }
-        else if (currentLife < 0)
-        {
-            currentLife = 0;
-        }
-
-        return currentLife;
-    }
+    #region LIFE SYSTEM
     
     public Image playerLifeBarImage;
     public Image aiLifeBarImage;
 
-    public void LifeDisplayUpdate()
+    public void LifeDisplayUpdate(string target)
     {
-        playerLifeBarImage.fillAmount = playerLife / maxLife;
-        aiLifeBarImage.fillAmount = aiLife / maxLife;
+        switch (target)
+        {
+            case "player" : playerLifeBarImage.fillAmount = (float)currentPlayerData.hp / playerData.hp; break;
+            case "ai" : aiLifeBarImage.fillAmount = (float)currentAiData.hp / aiData.hp; break;
+        }
+    }
+    
+    public int EditLife(int currentLife, int addedNumber, int maxLife)
+    {
+        currentLife += addedNumber;
+        return Math.Clamp(currentLife, 0, maxLife);
     }
 
-    public GameObject playerObject;
+    #endregion
     
-    public void Attaquer()
+
+    #region ATTACK GESTION SYSTEM
+
+    public Animation playerAnimation;
+
+    private void Attack(int index)
     {
         if (currentTurn == Turn.Player && canPlay)
         {
             canPlay = false;
-            aiLife = EditLife(aiLife, -20f);
-            playerObject.GetComponent<Animation>().Play("animation");
-            LifeDisplayUpdate();
+            switch (currentPlayerData.attacks[index].target)
+            {
+                case global::Attack.Target.Self : currentPlayerData.hp =
+                        EditLife(currentPlayerData.hp, currentPlayerData.attacks[index].power,playerData.hp);
+                        LifeDisplayUpdate("player");
+                    break;
+                case global::Attack.Target.Other : currentAiData.hp =
+                        EditLife(currentAiData.hp, currentPlayerData.attacks[index].power,aiData.hp);
+                        LifeDisplayUpdate("ai");
+                    break;
+            }
+            playerAnimation.Play(currentPlayerData.attacks[index].animName);
         }
     }
 
-    public void Soigner()
+    public void Attack1Button()
     {
-        if (currentTurn == Turn.Player && canPlay)
-        {
-            canPlay = false;
-            playerLife = EditLife(playerLife, +40f);
-            playerObject.GetComponent<Animation>().Play("heal");
-            LifeDisplayUpdate();
-        }
-        
+        Attack(0);
+    }
+    public void Attack2Button()
+    {
+        Attack(1);
+    }
+    public void Attack3Button()
+    {
+        Attack(2);
     }
     
-    public void Tirer()
-    {
-        if (currentTurn == Turn.Player && canPlay)
-        {
-            canPlay = false;
-            aiLife = EditLife(aiLife, -40f);
-            playerObject.GetComponent<Animation>().Play("gun");
-            LifeDisplayUpdate();
-        }
-        
-    }
-    
-    
-    
-    
-    
-    
+    #endregion
+
 }

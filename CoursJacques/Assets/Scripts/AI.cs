@@ -1,85 +1,92 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Random = UnityEngine.Random;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using UnityEngine.UI;
 
 public class AI : MonoBehaviour
 {
+    
     public FightManager fightManager;
-    public GameObject aiObject;
+    
+    
+    #region DATA INITIALIZATION
+    
+    // Stored data
+    public AiComportementData aiComportementData;
+    
+    // modifiable data
+    public AiComportementDataInstance currentAiComportementData;
+    public void Awake()
+    {
+        currentAiComportementData = aiComportementData.Instance();
+    }
+    
+    #endregion
+    
+    
+    #region STATE-MACHINE FOR AI WINNING STATE
+    
     public enum AIState
     {
-        loosing,
-        winning, 
+        Loosing,
+        Winning, 
     }
 
-    public AIState m_currentAIState = AIState.winning;
+    public AIState currentAIState = AIState.Winning;
         
     public void DetermineState(float hp)
     {
-        m_currentAIState = hp < 40 ? AIState.loosing : AIState.winning;
+        currentAIState = hp < currentAiComportementData.StepBeforeLoosing ? AIState.Loosing : AIState.Winning;
     }
-        
+    
+    #endregion
+    
+    
+    #region PLAY TURN OF AI IN FUNCTION OF HIS STATE
+    
     public void ManageAITurn()
     {
-        DetermineState(fightManager.aiLife);
-        switch (m_currentAIState )
+        DetermineState(fightManager.currentAiData.hp);
+        switch (currentAIState )
         {
-            case AIState.loosing:ManageLoosing(); break;
-            case AIState.winning: ManageWinning(); break;
+            case AIState.Loosing:ManageLoosing(); break;
+            case AIState.Winning: ManageWinning(); break;
         }   
     }
 
     public void ManageLoosing()
     {
         var rand = Random.Range(0, 100);
-        if(rand > 50)
-        {
-            Heal();
-        }
-        else
-        {
-            Attack();
-        }
-        
-        fightManager.LifeDisplayUpdate();
+        AttackAI(rand > currentAiComportementData.PercentLoosing ? 2 : 0);
     }
     
     public void ManageWinning()
     {
         var rand = Random.Range(0, 100);
-        if(rand > 60)
-        {
-            Shoot();
-        }
-        else
-        {
-            Attack();
-        }
-        
-        fightManager.LifeDisplayUpdate();
+        AttackAI(rand > currentAiComportementData.PercentWinning ? 1 : 0);
     }
+    
+    #endregion
+    
+    
+    #region ATTACK GESTION SYSTEM FOR AI
 
-    public void Attack()
+    public Animation aiAnimation;
+    
+    private void AttackAI(int index)
     {
-        fightManager.playerLife = fightManager.EditLife(fightManager.playerLife, -20f);
-        aiObject.GetComponent<Animation>().Play("animation");
+        switch (fightManager.currentAiData.attacks[index].target)
+        {
+            case Attack.Target.Self :
+                fightManager.currentAiData.hp = fightManager.EditLife(fightManager.currentAiData.hp, fightManager.currentAiData.attacks[index].power,fightManager.aiData.hp);
+                fightManager.LifeDisplayUpdate("ai");
+                break;
+            case Attack.Target.Other :
+                fightManager.currentPlayerData.hp = fightManager.EditLife(fightManager.currentPlayerData.hp, fightManager.currentAiData.attacks[index].power,fightManager.playerData.hp);
+                fightManager.LifeDisplayUpdate("player");
+                break;
+        }
+        aiAnimation.Play(fightManager.currentAiData.attacks[index].animName);
     }
     
-    public void Heal()
-    {
-        fightManager.aiLife = fightManager.EditLife(fightManager.aiLife, +40f);
-        aiObject.GetComponent<Animation>().Play("heal");
-    }
+    #endregion
     
-    public void Shoot()
-    {
-        fightManager.playerLife = fightManager.EditLife(fightManager.playerLife, -40f);
-        aiObject.GetComponent<Animation>().Play("gun");
-    }
-    
-        
 }

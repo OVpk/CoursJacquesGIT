@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -7,30 +5,23 @@ public class PassTurn : MonoBehaviour
 {
     public AI aiScript;
     public FightManager fightManager;
-
-    public GameObject text;
     
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    #region ATTACK EVENT SYSTEM
+    
+    //THIS FUNCTION IS CALL AT THE END OF ATTACK ANIM (with event), AND SWITCH THE TURN IF NOBODY HAVE WIN
+    
+    public TMP_Text endGameText;
+    
+    public void SwitchTurn()
     {
-        
-    }
-
-    public void Pass()
-    {
-        if (fightManager.playerLife == 0)
+        if (fightManager.currentPlayerData.hp == 0)
         {
-            text.GetComponent<TMP_Text>().text = "PERDU";
+            endGameText.text = "PERDU";
         }
-        if (fightManager.aiLife == 0)
+        else if (fightManager.currentAiData.hp == 0)
         {
-            text.GetComponent<TMP_Text>().text = "GAGNE";
+            endGameText.text = "GAGNE";
         }
         else
         {
@@ -40,7 +31,8 @@ public class PassTurn : MonoBehaviour
                 case FightManager.Turn.AI : aiScript.ManageAITurn(); break;
             }
         }
-        
-        
-    }
+    }   
+
+    #endregion
+    
 }
